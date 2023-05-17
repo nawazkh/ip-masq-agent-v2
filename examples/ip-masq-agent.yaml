@@ -39,17 +39,17 @@ spec:
           sources:
             # Note these ConfigMaps must be created in the same namespace as the daemonset
             - configMap:
-              name: ip-masq-agent-config
-              optional: true
-              items:
-                - key: ip-masq-agent
-                  path: ip-masq-agent
-                  mode: 444
+                name: ip-masq-agent-config
+                optional: true
+                items:
+                  - key: ip-masq-agent
+                    path: ip-masq-agent
+                    mode: 444
             - configMap:
-              name: ip-masq-agent-config-reconciled
-              optional: true
-              items:
-                # Avoiding duplicate paths
-                - key: ip-masq-agent-reconciled
-                  path: ip-masq-agent-reconciled
-                  mode: 444
+                name: ip-masq-agent-config-reconciled
+                optional: true
+                items:
+                  # Avoiding duplicate paths
+                  - key: ip-masq-agent-reconciled
+                    path: ip-masq-agent-reconciled
+                    mode: 444
