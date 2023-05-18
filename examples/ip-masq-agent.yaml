@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: ip-masq-agent
-  namespace: default
+  namespace: kube-system
   labels:
     component: ip-masq-agent
     kubernetes.io/cluster-service: "true"
@@ -23,7 +23,11 @@ spec:
         image: mcr.microsoft.com/aks/ip-masq-agent-v2:v0.1.1
         imagePullPolicy: Always
         args:
-          - --v=2
+          - resync-interval=60
+          - masq-chain="IP-MASQ-AGENT"
+          - nomasq-all-reserved-ranges=true # All the IPs which are not marked reserved by the RFCs are masqueraded.
+          - enable-ipv6=false # using the default enable-ipv6=false
+          - "v=8"
         securityContext:
           privileged: false
           capabilities:
@@ -45,11 +49,12 @@ spec:
                   - key: ip-masq-agent
                     path: ip-masq-agent
                     mode: 444
-            - configMap:
-                name: ip-masq-agent-config-reconciled
-                optional: true
-                items:
-                  # Avoiding duplicate paths
-                  - key: ip-masq-agent-reconciled
-                    path: ip-masq-agent-reconciled
-                    mode: 444
+            ## since we haven't added a reconciliation process to manage the configMap
+            # - configMap: 
+            #     name: ip-masq-agent-config-reconciled
+            #     optional: true
+            #     items:
+            #       # Avoiding duplicate paths
+            #       - key: ip-masq-agent-reconciled
+            #         path: ip-masq-agent-reconciled
+            #         mode: 444
